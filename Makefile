@@ -7,16 +7,16 @@ PORT ?= 8080
 # ── Dev ────────────────────────────────────────────────────────────────────────
 
 install:
-	pip install -r requirements.txt
+	python3 -m pip install -r requirements.txt
 
 playwright-install:
-	playwright install chromium --with-deps
+	python3 -m playwright install chromium --with-deps
 
 dev:
-	uvicorn app.main:app --host 0.0.0.0 --port $(PORT) --reload
+	python3 -m uvicorn app.main:app --host 0.0.0.0 --port $(PORT) --reload
 
 run:
-	uvicorn app.main:app --host 0.0.0.0 --port $(PORT)
+	python3 -m uvicorn app.main:app --host 0.0.0.0 --port $(PORT)
 
 # ── Docker ─────────────────────────────────────────────────────────────────────
 
