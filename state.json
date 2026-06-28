@@ -1,1 +1,47 @@
-{}
+{
+  "Boulanger": {
+    "status": "unknown",
+    "url": "https://www.boulanger.com/ref/1216685",
+    "last_checked": "2026-06-28T10:59:13.445581+00:00",
+    "needs_geo": false
+  },
+  "Amazon": {
+    "status": "unknown",
+    "url": "https://www.amazon.fr/dp/B0CY2YW8BT",
+    "last_checked": "2026-06-28T10:59:13.445581+00:00",
+    "needs_geo": false
+  },
+  "Darty": {
+    "status": "unknown",
+    "url": "https://www.darty.com/nav/achat/gros_electromenager/chauffage_climatisation/climatiseur/midea_mmcs-12hrn8-qrd0.html",
+    "last_checked": "2026-06-28T10:59:13.445581+00:00",
+    "needs_geo": false
+  },
+  "ManoMano": {
+    "status": "unknown",
+    "url": "https://www.manomano.fr/p/midea-climatiseur-split-mobile-reversible-froid-chaud-3500w12000btu-wifi-deshumidificateur-ventilateur-jusqua-40m2-kit-fenetre-inclus-83810402",
+    "last_checked": "2026-06-28T10:59:13.445581+00:00",
+    "needs_geo": false
+  },
+  "Leroy Merlin": {
+    "status": "unknown",
+    "url": "https://www.leroymerlin.fr/produits/climatiseur-split-mobile-reversible-portasplit-midea-par-optimea-93857579.html",
+    "last_checked": "2026-06-28T10:59:13.445581+00:00",
+    "needs_geo": true
+  },
+  "Bricoman": {
+    "status": "unknown",
+    "url": "https://www.bricoman.fr/produits/climatiseur-mobile-reversible-portasplit-midea-25088072.html",
+    "last_checked": "2026-06-28T10:59:13.445581+00:00",
+    "needs_geo": true
+  },
+  "Castorama": {
+    "status": "geo_unverified",
+    "url": "https://www.castorama.fr/climatiseur-portasplit-midea-reversible-3500w/8431312260509_CAFR.prd",
+    "last_checked": "2026-06-28T10:59:13.445581+00:00",
+    "needs_geo": true
+  },
+  "_meta": {
+    "last_run": "2026-06-28T10:59:13.445581+00:00"
+  }
+}
