@@ -253,6 +253,8 @@ def run_check(ntfy_topic: str | None = None, email_cb=None) -> dict:
             if status == "in_stock":
                 state[pid][name]["last_in_stock"] = now
 
+            # Notify only on status transitions (not on every check)
+            if status != prev_status and prev_status is not None:
                 if status == "in_stock":
                     title = f"✅ {name} : en stock !"
                     msg   = f"{product['label']} disponible sur {name}.\n{site['url']}"
@@ -264,6 +266,14 @@ def run_check(ntfy_topic: str | None = None, email_cb=None) -> dict:
                 elif status == "geo_unverified" and prev_status not in ("geo_unverified", "in_stock"):
                     title = f"🔍 {name} : à vérifier"
                     msg   = f"Statut potentiellement positif sur {name}.\n{site['url']}"
+                    if ntfy_topic:
+                        send_ntfy(ntfy_topic, title, msg)
+                    if email_cb:
+                        email_cb(title, msg)
+
+                elif status == "out_of_stock" and prev_status == "in_stock":
+                    title = f"❌ {name} : rupture de stock"
+                    msg   = f"{product['label']} n'est plus disponible sur {name}.\n{site['url']}"
                     if ntfy_topic:
                         send_ntfy(ntfy_topic, title, msg)
                     if email_cb:

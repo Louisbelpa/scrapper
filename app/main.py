@@ -171,7 +171,10 @@ class EmailBody(BaseModel):
 
 
 @app.post("/api/subscribe")
-async def subscribe(body: EmailBody):
+async def subscribe(body: EmailBody, request: Request):
+    ip = request.client.host if request.client else "unknown"
+    if not limiter.is_allowed(f"subscribe:{ip}", max_calls=5, window_seconds=60):
+        raise HTTPException(status_code=429, detail="Trop de requêtes. Attendez 1 minute.")
     email = body.email.strip().lower()
     if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
         raise HTTPException(status_code=422, detail="Adresse email invalide")
@@ -184,7 +187,10 @@ async def subscribe(body: EmailBody):
 
 
 @app.delete("/api/subscribe")
-async def unsubscribe(body: EmailBody):
+async def unsubscribe(body: EmailBody, request: Request):
+    ip = request.client.host if request.client else "unknown"
+    if not limiter.is_allowed(f"subscribe:{ip}", max_calls=5, window_seconds=60):
+        raise HTTPException(status_code=429, detail="Trop de requêtes. Attendez 1 minute.")
     email = body.email.strip().lower()
     removed = remove_subscriber(email)
     return JSONResponse({
