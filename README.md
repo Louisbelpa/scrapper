@@ -1,61 +1,129 @@
-# Stock checker — Midea PortaSplit
+# PortaSplit Monitor
 
-Vérifie périodiquement la disponibilité du climatiseur Midea PortaSplit
-(MMCS-12HRN8-QRD0) sur plusieurs sites, et envoie une notif sur ton
-téléphone via [ntfy.sh](https://ntfy.sh) quand le statut change.
+Surveillance en temps réel de la disponibilité du **Midea PortaSplit MMCS-12HRN8-QRD0**
+sur 7 sites e-commerce français et en magasin physique (Leroy Merlin, Castorama, Bricoman).
 
-## Setup (5 min)
+## Fonctionnalités
 
-1. **Installe l'app ntfy** sur ton téléphone (iOS/Android, gratuite,
-   pas de compte requis).
-2. Dans l'app, abonne-toi à un topic unique et secret, par exemple
-   `louis-portasplit-7x2k9` (n'importe qui connaissant le nom du topic
-   peut t'envoyer des notifs ou lire les messages — choisis un nom
-   random, pas juste "portasplit").
-3. Crée un repo GitHub, mets-y ces fichiers.
-4. Dans **Settings > Secrets and variables > Actions**, ajoute un
-   secret `NTFY_TOPIC` avec la valeur de ton topic (juste le nom,
-   ex: `louis-portasplit-7x2k9`, pas l'URL complète).
-5. Le workflow tourne automatiquement toutes les heures (`cron` dans
-   `.github/workflows/check-stock.yml`). Tu peux aussi le lancer
-   manuellement depuis l'onglet **Actions > Run workflow**.
+- Vérification automatique toutes les 10 minutes
+- 7 sites e-commerce : Boulanger, Amazon, Darty, ManoMano, Leroy Merlin, Castorama, Bricoman
+- Recherche de stock en magasin physique par code postal (rayon configurable)
+- Notifications push mobile via [ntfy.sh](https://ntfy.sh) (gratuit, sans compte)
+- Alertes email via SMTP (Gmail, Resend, Brevo…)
+- Historique des changements de statut
+- Interface web PWA (installable, dark mode, responsive)
+- Vérification manuelle à la demande
 
-## Tester en local
+## Démarrage rapide
+
+### En local (dev)
 
 ```bash
-pip install -r requirements.txt
-export NTFY_TOPIC="louis-portasplit-7x2k9"
-python check_stock.py
+git clone https://github.com/Louisbelpa/scrapper
+cd scrapper
+make install
+make playwright-install   # optionnel — pour les magasins physiques
+cp .env.example .env      # remplir les variables
+make dev                  # http://localhost:8080
 ```
 
-## Limites actuelles (important)
+### En production (Docker + HTTPS)
 
-- **Boulanger, Amazon, Darty, ManoMano** : détection basée sur des
-  mots-clés génériques ("indisponible", "ajouter au panier", etc.)
-  trouvés dans le texte de la page. Validé en direct pour Boulanger
-  au moment de l'écriture (produit actuellement indisponible). Les
-  3 autres sont à valider — il est possible que les mots-clés
-  doivent être ajustés selon comment chaque site formule son statut.
-- **Leroy Merlin, Bricoman, Castorama** (groupe ADEO/Kingfisher) :
-  la dispo réelle (magasin + livraison) se charge en JS après
-  géolocalisation/code postal — impossible à lire avec un simple
-  `requests.get()`. Le script les marque `geo_unverified` dès qu'il
-  détecte un signal positif, mais **ça ne confirme pas la livraison
-  dans le 75017**. Pour aller plus loin sur ces 3 sites, il faudra :
-  - soit intercepter l'appel API interne (ouvrir les devtools réseau
-    du site, chercher la requête déclenchée quand on tape un code
-    postal, et l'appeler directement avec `requests`)
-  - soit utiliser Playwright (navigateur headless) pour simuler la
-    saisie du code postal comme un vrai utilisateur — plus lourd
-    mais plus fiable.
-- Les sites avec anti-bot (Amazon en tête) peuvent bloquer les
-  requêtes répétées. Si tu te fais bloquer : espacer les checks
-  (toutes les 2-3h plutôt que toutes les heures), ou passer par un
-  service de proxy résidentiel si ça devient un vrai besoin.
+```bash
+# 1. Configurer les variables d'environnement
+cp .env.example .env
+# Éditer .env avec vos valeurs
 
-## Prochaine étape suggérée
+# 2. Obtenir le certificat SSL (une seule fois)
+make certbot DOMAIN=portasplit.example.com EMAIL=vous@example.com
 
-Valider en vrai les 4 sites "simples" (lancer le script en local,
-comparer avec ce que tu vois dans ton navigateur), puis on attaque
-l'API/Playwright pour Leroy Merlin + Bricoman + Castorama si tu veux
-vraiment couvrir le 75017 partout.
+# 3. Démarrer tous les services
+make docker-up
+```
+
+## Variables d'environnement
+
+| Variable | Défaut | Description |
+|---|---|---|
+| `NTFY_TOPIC` | — | Topic ntfy.sh pour les notifications push |
+| `SMTP_HOST` | smtp.gmail.com | Serveur SMTP |
+| `SMTP_PORT` | 587 | Port SMTP (STARTTLS) |
+| `SMTP_USER` | — | Adresse expéditeur (ex: vous@gmail.com) |
+| `SMTP_PASS` | — | Mot de passe ou App Password Gmail |
+| `SMTP_FROM` | = SMTP_USER | Nom affiché dans les emails |
+| `PLAYWRIGHT_DEBUG` | 0 | Mettre à 1 pour sauvegarder des screenshots de debug |
+| `PORT` | 8080 | Port d'écoute de l'app |
+
+Voir `.env.example` pour des exemples complets (Gmail, Resend, Brevo).
+
+## Notifications ntfy.sh
+
+1. Installer l'app **ntfy** sur Android ou iOS (gratuite)
+2. S'abonner à un topic unique et secret, ex: `portasplit-abc123`
+3. Renseigner `NTFY_TOPIC=portasplit-abc123` dans `.env`
+
+Les notifications partent uniquement lors d'un **changement de statut** :
+- ✅ En stock sur Boulanger !
+- ❌ Boulanger : rupture de stock
+- 🔍 Leroy Merlin : à vérifier (dispo potentielle, code postal requis)
+
+## Abonnements email
+
+Renseigner les variables SMTP, puis aller sur l'interface web → section **Notifications email**.
+Chaque abonné reçoit un email HTML à chaque changement de disponibilité.
+
+## Magasins physiques
+
+La section **Magasins physiques** de l'interface permet de saisir un code postal
+et un rayon (10/25/50/100 km) pour rechercher le stock dans les enseignes physiques.
+
+Si Playwright est installé (`make playwright-install`), la recherche navigue sur
+les sites comme un vrai utilisateur — plus fiable. Sinon, un fallback REST est utilisé.
+
+## Architecture
+
+```
+app/
+├── main.py              # FastAPI + APScheduler (vérif toutes les 10 min)
+├── scraper.py           # Scraping HTTP (requests + BeautifulSoup)
+├── playwright_checker.py# Scraping navigateur headless (magasins physiques)
+├── store_checker.py     # Fallback REST pour les magasins physiques
+├── email_notif.py       # Envoi email SMTP
+├── rate_limiter.py      # Rate limiter sliding-window en mémoire
+└── static/
+    ├── index.html       # Interface web SPA (vanilla JS)
+    ├── manifest.json    # PWA manifest
+    └── sw.js            # Service worker
+nginx/nginx.conf         # Reverse proxy HTTPS (Let's Encrypt)
+state.json               # État persistant (statuts, prix, historique)
+subscribers.json         # Emails abonnés
+check_stock.py           # Script CLI pour GitHub Actions
+```
+
+## Commandes utiles
+
+```bash
+make dev                 # Serveur de dev avec rechargement auto
+make run                 # Serveur de production local
+make docker-up           # Démarrer web + nginx + certbot
+make docker-logs         # Suivre les logs
+make docker-shell        # Shell dans le conteneur web
+make test-scraper        # Tester le scraping sur Boulanger
+make test-geo            # Tester le géocodage (code postal → lat/lng)
+make test-playwright     # Tester la recherche magasins (75017, 25 km)
+make reset-state         # Remettre state.json à zéro
+make clean               # Supprimer les fichiers temporaires
+```
+
+## GitHub Actions
+
+Le fichier `check-stock.yml` lance `check_stock.py` toutes les heures depuis GitHub Actions.
+Configurer le secret `NTFY_TOPIC` dans **Settings > Secrets and variables > Actions**.
+
+## Notes
+
+- Les sites avec anti-bot (Amazon notamment) peuvent bloquer les IPs de datacenter.
+  L'app tourne mieux depuis un VPS résidentiel (OVH, Scaleway, machine perso).
+- Leroy Merlin, Castorama et Bricoman nécessitent un code postal pour la disponibilité réelle —
+  le scraping HTTP les marque `geo_unverified`, Playwright les vérifie précisément.
+- `state.json` est versionné pour que GitHub Actions conserve l'historique entre les runs.
