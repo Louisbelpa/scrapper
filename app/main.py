@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 from apscheduler.schedulers.background import BackgroundScheduler
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -18,11 +18,20 @@ from .email_notif import (
     notify_subscribers,
     remove_subscriber,
 )
+from .rate_limiter import limiter
 from .scraper import PRODUCTS, load_state, run_check
 from .store_checker import check_all_stores
 
+# Playwright est optionnel — l'app tourne sans
+try:
+    from .playwright_checker import check_stores_playwright, PLAYWRIGHT_AVAILABLE
+except ImportError:
+    PLAYWRIGHT_AVAILABLE = False
+    check_stores_playwright = None
+
 STATIC_DIR = Path(__file__).parent / "static"
 NTFY_TOPIC = os.environ.get("NTFY_TOPIC")
+PORT = int(os.environ.get("PORT", "8080"))
 
 scheduler = BackgroundScheduler()
 
@@ -56,6 +65,16 @@ async def root():
     return FileResponse(STATIC_DIR / "index.html")
 
 
+@app.get("/manifest.json")
+async def manifest():
+    return FileResponse(STATIC_DIR / "manifest.json")
+
+
+@app.get("/sw.js")
+async def service_worker():
+    return FileResponse(STATIC_DIR / "sw.js", media_type="application/javascript")
+
+
 # ── API : statut e-commerce ───────────────────────────────────────────────────
 
 @app.get("/api/status")
@@ -72,14 +91,15 @@ async def get_status():
             name = site["name"]
             info = prod_state.get(name, {})
             sites_out.append({
-                "name":         name,
-                "url":          site["url"],
-                "color":        site.get("color", "#64748b"),
-                "status":       info.get("status", "unknown"),
-                "price":        info.get("price"),
-                "last_checked": info.get("last_checked"),
-                "needs_geo":    site.get("needs_geo", False),
-                "history":      info.get("history", []),
+                "name":          name,
+                "url":           site["url"],
+                "color":         site.get("color", "#64748b"),
+                "status":        info.get("status", "unknown"),
+                "price":         info.get("price"),
+                "last_checked":  info.get("last_checked"),
+                "last_in_stock": info.get("last_in_stock"),
+                "needs_geo":     site.get("needs_geo", False),
+                "history":       info.get("history", []),
             })
 
         products_out.append({
@@ -90,25 +110,32 @@ async def get_status():
         })
 
     return JSONResponse({
-        "products": products_out,
-        "last_run": state.get("_meta", {}).get("last_run"),
-        "email_configured": email_configured(),
-        "subscribers_count": len(load_subscribers()),
+        "products":           products_out,
+        "last_run":           state.get("_meta", {}).get("last_run"),
+        "email_configured":   email_configured(),
+        "subscribers_count":  len(load_subscribers()),
+        "playwright_enabled": PLAYWRIGHT_AVAILABLE,
     })
 
 
 @app.post("/api/refresh")
-async def trigger_refresh():
+async def trigger_refresh(request: Request):
+    ip = request.client.host if request.client else "unknown"
+    if not limiter.is_allowed(f"refresh:{ip}", max_calls=1, window_seconds=60):
+        wait = limiter.seconds_until_next(f"refresh:{ip}", window_seconds=60)
+        raise HTTPException(
+            status_code=429,
+            detail=f"Trop de requêtes. Réessayez dans {wait}s.",
+        )
     loop = asyncio.get_event_loop()
     await loop.run_in_executor(None, lambda: run_check(ntfy_topic=NTFY_TOPIC, email_cb=email_cb))
     return await get_status()
 
 
-# ── API : magasins physiques ───────────────────────────────────────────────────
+# ── API : magasins physiques ──────────────────────────────────────────────────
 
 @app.get("/api/stores")
 async def get_stores():
-    """Retourne le dernier résultat de recherche de magasins (cache state.json)."""
     state = load_state()
     physical = state.get("_physical_stores")
     if not physical:
@@ -117,21 +144,27 @@ async def get_stores():
 
 
 @app.post("/api/stores/search")
-async def search_stores(postal_code: str, radius_km: int = 25):
-    """Lance une recherche de stock en magasin pour un code postal donné."""
+async def search_stores(request: Request, postal_code: str, radius_km: int = 25):
     if not re.fullmatch(r"\d{5}", postal_code):
         raise HTTPException(status_code=422, detail="Code postal invalide (5 chiffres attendus)")
     if radius_km not in (10, 25, 50, 100):
         raise HTTPException(status_code=422, detail="Rayon invalide (10, 25, 50 ou 100 km)")
 
-    loop = asyncio.get_event_loop()
-    result = await loop.run_in_executor(
-        None, lambda: check_all_stores(postal_code, radius_km)
-    )
+    ip = request.client.host if request.client else "unknown"
+    if not limiter.is_allowed(f"stores:{ip}", max_calls=3, window_seconds=60):
+        raise HTTPException(status_code=429, detail="Trop de requêtes. Attendez 1 minute.")
+
+    if PLAYWRIGHT_AVAILABLE and check_stores_playwright:
+        result = await check_stores_playwright(postal_code, radius_km)
+    else:
+        loop = asyncio.get_event_loop()
+        result = await loop.run_in_executor(
+            None, lambda: check_all_stores(postal_code, radius_km)
+        )
     return JSONResponse(result)
 
 
-# ── API : abonnements email ────────────────────────────────────────────────────
+# ── API : abonnements email ───────────────────────────────────────────────────
 
 class EmailBody(BaseModel):
     email: str

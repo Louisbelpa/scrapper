@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 import json
+import random
 import re
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -29,14 +31,30 @@ PRICE_PATTERNS = [
     r"€\s*(\d[\d\s]*[,.]?\d*)",
 ]
 
-HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-        "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-    ),
-    "Accept-Language": "fr-FR,fr;q=0.9",
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+# Rotation de User-Agent pour réduire les blocages anti-bot
+USER_AGENTS = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4.1 Safari/605.1.15",
+]
+
+BASE_HEADERS = {
+    "Accept-Language": "fr-FR,fr;q=0.9,en;q=0.8",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Connection": "keep-alive",
+    "Upgrade-Insecure-Requests": "1",
+    "Sec-Fetch-Dest": "document",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Site": "none",
 }
+
+# Délai aléatoire entre requêtes (secondes) pour limiter la détection
+REQUEST_DELAY_MIN = 1.5
+REQUEST_DELAY_MAX = 4.0
 
 # ── Products ─────────────────────────────────────────────────────────────────
 # Each product has its own set of site URLs.
@@ -102,9 +120,13 @@ SITES = PRODUCTS[0]["sites"]
 
 # ── Scraping helpers ──────────────────────────────────────────────────────────
 
+def _headers() -> dict:
+    return {**BASE_HEADERS, "User-Agent": random.choice(USER_AGENTS)}
+
+
 def fetch(url: str) -> str | None:
     try:
-        resp = requests.get(url, headers=HEADERS, timeout=15)
+        resp = requests.get(url, headers=_headers(), timeout=15)
         resp.raise_for_status()
         return resp.text
     except requests.RequestException as e:
@@ -199,8 +221,13 @@ def run_check(ntfy_topic: str | None = None, email_cb=None) -> dict:
         if pid not in state:
             state[pid] = {}
 
-        for site in product["sites"]:
+        for i, site in enumerate(product["sites"]):
             name = site["name"]
+            # Délai aléatoire entre requêtes (sauf pour la première)
+            if i > 0:
+                delay = random.uniform(REQUEST_DELAY_MIN, REQUEST_DELAY_MAX)
+                time.sleep(delay)
+
             print(f"[{product['label']}] Vérification: {name}...")
             result = check_site(site)
             status = result["status"]
@@ -222,6 +249,9 @@ def run_check(ntfy_topic: str | None = None, email_cb=None) -> dict:
                     "timestamp": now,
                 })
                 state[pid][name]["history"] = history[-50:]
+
+            if status == "in_stock":
+                state[pid][name]["last_in_stock"] = now
 
                 if status == "in_stock":
                     title = f"✅ {name} : en stock !"
@@ -245,6 +275,8 @@ def run_check(ntfy_topic: str | None = None, email_cb=None) -> dict:
                 "url": site["url"],
                 "last_checked": now,
                 "needs_geo": site.get("needs_geo", False),
+                # last_in_stock is set above only when status == "in_stock"
+                # so we preserve the existing value here by not overwriting
             })
 
     state["_meta"] = {"last_run": now}
