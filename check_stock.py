@@ -25,21 +25,28 @@ from pathlib import Path
 import requests
 from bs4 import BeautifulSoup
 
+try:
+    from curl_cffi import requests as cffi_requests
+    _USE_CFFI = True
+except ImportError:
+    _USE_CFFI = False
+
 STATE_FILE = Path(__file__).parent / "state.json"
 
-# Mots-clés génériques (utilisés si le site n'a pas de config spécifique)
+# Mots-clés cherchés dans le HTML brut (pas le texte extrait).
+# Les mots out_of_stock ont priorité absolue sur in_stock.
 DEFAULT_OUT_OF_STOCK = [
-    "indisponible",
-    "rupture de stock",
-    "épuisé",
-    "produit non disponible",
     "actuellement indisponible",
+    "rupture de stock",
+    "produit épuisé",
+    "produit non disponible",
     "n'est plus disponible",
+    "article indisponible",
 ]
 DEFAULT_IN_STOCK = [
+    "livraison estimée",
+    "expédié sous",
     "ajouter au panier",
-    "ajouter au panier",
-    "en stock",
 ]
 
 HEADERS = {
@@ -60,46 +67,44 @@ SITES = [
         "name": "Boulanger",
         "url": "https://www.boulanger.com/ref/1216685",
         "needs_geo": False,
+        "out_of_stock_keywords": ["indisponible", "rupture de stock"],
+        "in_stock_keywords": ["ajouter au panier", "livraison estimée"],
     },
     {
         "name": "Amazon",
         "url": "https://www.amazon.fr/dp/B0CY2YW8BT",
         "needs_geo": False,
-    },
-    {
-        "name": "Darty",
-        "url": "https://www.darty.com/nav/achat/gros_electromenager/chauffage_climatisation/climatiseur/midea_mmcs-12hrn8-qrd0.html",
-        "needs_geo": False,
+        # Sur Amazon le signal fiable est "actuellement indisponible" (hors stock)
+        # ou la présence du bouton add-to-cart avec un délai de livraison.
+        "out_of_stock_keywords": ["actuellement indisponible", "nous ne savons pas quand"],
+        "in_stock_keywords": ["livraison estimée", "expédié sous", "add-to-cart-button"],
     },
     {
         "name": "ManoMano",
         "url": "https://www.manomano.fr/p/midea-climatiseur-split-mobile-reversible-froid-chaud-3500w12000btu-wifi-deshumidificateur-ventilateur-jusqua-40m2-kit-fenetre-inclus-83810402",
         "needs_geo": False,
-    },
-    {
-        "name": "Leroy Merlin",
-        "url": "https://www.leroymerlin.fr/produits/climatiseur-split-mobile-reversible-portasplit-midea-par-optimea-93857579.html",
-        "needs_geo": True,
-    },
-    {
-        "name": "Bricoman",
-        "url": "https://www.bricoman.fr/produits/climatiseur-mobile-reversible-portasplit-midea-25088072.html",
-        "needs_geo": True,
+        "out_of_stock_keywords": ["produit épuisé", "rupture de stock", "indisponible"],
+        "in_stock_keywords": ["livraison estimée", "expédié sous", "en stock"],
     },
     {
         "name": "Castorama",
         "url": "https://www.castorama.fr/climatiseur-portasplit-midea-reversible-3500w/8431312260509_CAFR.prd",
         "needs_geo": True,
+        "out_of_stock_keywords": ["indisponible", "rupture de stock", "épuisé"],
+        "in_stock_keywords": ["ajouter au panier", "livraison estimée"],
     },
 ]
 
 
-def fetch(url: str) -> str | None:
+def fetch(url: str) -> "str | None":
     try:
-        resp = requests.get(url, headers=HEADERS, timeout=15)
+        if _USE_CFFI:
+            resp = cffi_requests.get(url, headers=HEADERS, timeout=15, impersonate="chrome124")
+        else:
+            resp = requests.get(url, headers=HEADERS, timeout=15)
         resp.raise_for_status()
         return resp.text
-    except requests.RequestException as e:
+    except Exception as e:
         print(f"  [erreur réseau] {e}", file=sys.stderr)
         return None
 
@@ -110,23 +115,19 @@ def check_site(site: dict) -> str:
     if html is None:
         return "unknown"
 
-    soup = BeautifulSoup(html, "html.parser")
-    text = soup.get_text(separator=" ", strip=True).lower()
+    # On cherche dans le HTML brut (minuscules) pour capter aussi les attributs.
+    raw = html.lower()
 
     out_kw = site.get("out_of_stock_keywords", DEFAULT_OUT_OF_STOCK)
     in_kw = site.get("in_stock_keywords", DEFAULT_IN_STOCK)
 
-    has_out = any(kw in text for kw in out_kw)
-    has_in = any(kw in text for kw in in_kw)
+    has_out = any(kw in raw for kw in out_kw)
+    has_in = any(kw in raw for kw in in_kw)
 
-    if has_out and not has_in:
+    if has_out:
+        # Les signaux de rupture ont priorité absolue.
         status = "out_of_stock"
-    elif has_in and not has_out:
-        status = "in_stock"
-    elif has_in and has_out:
-        # Les deux apparaissent (ex: "indisponible" pour le retrait mais
-        # "ajouter au panier" actif) -> on penche pour in_stock mais à
-        # vérifier visuellement la première fois.
+    elif has_in:
         status = "in_stock"
     else:
         status = "unknown"
