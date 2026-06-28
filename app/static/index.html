@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PortaSplit Monitor — Disponibilité en France</title>
-  <meta name="description" content="Surveillance en temps réel de la disponibilité du Midea PortaSplit MMCS-12HRN8-QRD0 sur les sites français.">
+  <meta name="description" content="Surveillance en temps réel de la disponibilité du Midea PortaSplit MMCS-12HRN8-QRD0 sur les sites et magasins français.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>❄️</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -12,547 +12,418 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #f0f4f8;
-      --card: #ffffff;
-      --border: #e2e8f0;
-      --text: #0f172a;
-      --muted: #64748b;
-      --faint: #94a3b8;
-      --green: #16a34a;
-      --green-bg: #dcfce7;
+      --bg:        #f0f4f8;
+      --card:      #ffffff;
+      --border:    #e2e8f0;
+      --text:      #0f172a;
+      --muted:     #64748b;
+      --faint:     #94a3b8;
+      --green:     #16a34a;
+      --green-bg:  #dcfce7;
       --green-dot: #22c55e;
-      --red: #dc2626;
-      --red-bg: #fee2e2;
-      --amber: #d97706;
-      --amber-bg: #fef3c7;
-      --gray-bg: #f1f5f9;
-      --blue: #2563eb;
-      --blue-light: #eff6ff;
-      --blue-border: #bfdbfe;
-      --shadow: 0 1px 3px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.05);
-      --shadow-hover: 0 4px 16px rgba(0,0,0,.1), 0 2px 4px rgba(0,0,0,.06);
+      --red:       #dc2626;
+      --red-bg:    #fee2e2;
+      --amber:     #d97706;
+      --amber-bg:  #fef3c7;
+      --gray-bg:   #f1f5f9;
+      --blue:      #2563eb;
+      --blue-light:#eff6ff;
+      --blue-border:#bfdbfe;
+      --sh:  0 1px 3px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.05);
+      --shh: 0 4px 16px rgba(0,0,0,.10),0 2px 4px rgba(0,0,0,.06);
     }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: 'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ── Header ── */
+    /* ── Header ────────────────────────────────── */
     .header {
-      background: linear-gradient(160deg, #0b1222 0%, #1a2540 50%, #0f2027 100%);
+      background: linear-gradient(160deg,#0b1222 0%,#1a2540 55%,#0f2027 100%);
       color: white;
-      padding: 28px 20px 32px;
+      padding: 28px 20px 30px;
       position: relative;
       overflow: hidden;
     }
-
     .header::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
-      pointer-events: none;
+      content:'';position:absolute;inset:0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff' fill-opacity='.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E") repeat;
+      pointer-events:none;
     }
-
     .header-inner {
-      max-width: 900px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: relative;
+      max-width:940px;margin:0 auto;
+      display:flex;justify-content:space-between;align-items:center;
+      position:relative;
     }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
+    .logo { display:flex;align-items:center;gap:14px; }
     .logo-icon {
-      width: 48px;
-      height: 48px;
-      background: linear-gradient(135deg, #3b82f6, #2563eb);
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      box-shadow: 0 4px 12px rgba(37,99,235,.4);
-      flex-shrink: 0;
+      width:48px;height:48px;
+      background:linear-gradient(135deg,#3b82f6,#2563eb);
+      border-radius:14px;display:flex;align-items:center;justify-content:center;
+      font-size:24px;box-shadow:0 4px 12px rgba(37,99,235,.4);flex-shrink:0;
     }
-
-    .logo-title {
-      font-size: 22px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      line-height: 1;
-    }
-
-    .logo-sub {
-      font-size: 12px;
-      color: #94a3b8;
-      margin-top: 4px;
-      font-weight: 400;
-    }
-
-    .header-clock {
-      text-align: right;
-    }
-
+    .logo-title { font-size:22px;font-weight:800;letter-spacing:-.5px;line-height:1; }
+    .logo-sub   { font-size:12px;color:#94a3b8;margin-top:4px; }
+    .header-clock { text-align:right; }
     .clock-time {
-      font-size: 28px;
-      font-weight: 800;
-      letter-spacing: -1px;
-      line-height: 1;
-      font-variant-numeric: tabular-nums;
+      font-size:28px;font-weight:800;letter-spacing:-1px;
+      line-height:1;font-variant-numeric:tabular-nums;
     }
+    .clock-date { font-size:12px;color:#94a3b8;margin-top:4px;text-transform:capitalize; }
 
-    .clock-date {
-      font-size: 12px;
-      color: #94a3b8;
-      margin-top: 4px;
-      text-transform: capitalize;
-    }
-
-    /* ── Stats bar ── */
-    .stats-bar {
-      background: white;
-      border-bottom: 1px solid var(--border);
-    }
-
+    /* ── Stats bar ─────────────────────────────── */
+    .stats-bar { background:white;border-bottom:1px solid var(--border); }
     .stats-inner {
-      max-width: 900px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      padding: 0 20px;
+      max-width:940px;margin:0 auto;
+      display:grid;grid-template-columns:repeat(4,1fr);padding:0 20px;
     }
-
-    .stat {
-      padding: 20px 16px;
-      text-align: center;
-    }
-
-    .stat + .stat {
-      border-left: 1px solid var(--border);
-    }
-
+    .stat { padding:18px 12px;text-align:center; }
+    .stat + .stat { border-left:1px solid var(--border); }
     .stat-number {
-      font-size: 36px;
-      font-weight: 900;
-      line-height: 1;
-      letter-spacing: -1.5px;
-      color: var(--text);
-      font-variant-numeric: tabular-nums;
+      font-size:32px;font-weight:900;line-height:1;
+      letter-spacing:-1.5px;color:var(--text);font-variant-numeric:tabular-nums;
     }
-
-    .stat-number.green { color: var(--green); }
-    .stat-number.blue  { color: var(--blue); }
-
+    .stat-number.green { color:var(--green); }
+    .stat-number.blue  { color:var(--blue); }
+    .stat-number.amber { color:var(--amber); }
     .stat-label {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 5px;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
+      font-size:11px;color:var(--muted);margin-top:4px;
+      font-weight:600;text-transform:uppercase;letter-spacing:.5px;
+    }
+    @media(max-width:520px){
+      .stats-inner{ grid-template-columns:repeat(2,1fr); }
+      .stat:nth-child(2){ border-left:1px solid var(--border); }
+      .stat:nth-child(3){ border-left:none;border-top:1px solid var(--border); }
+      .stat:nth-child(4){ border-top:1px solid var(--border); }
     }
 
-    /* ── Main container ── */
-    .main {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 24px 20px 40px;
-    }
+    /* ── Layout ────────────────────────────────── */
+    .main { max-width:940px;margin:0 auto;padding:24px 20px 48px; }
 
-    /* ── Refresh bar ── */
-    .refresh-bar {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 14px 18px;
-      margin-bottom: 24px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      box-shadow: var(--shadow);
+    /* ── Controls bar ──────────────────────────── */
+    .controls {
+      background:white;border:1px solid var(--border);border-radius:14px;
+      padding:14px 18px;margin-bottom:24px;
+      display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+      box-shadow:var(--sh);
     }
-
     .refresh-info {
-      font-size: 13px;
-      color: var(--muted);
-      white-space: nowrap;
-      min-width: 170px;
+      font-size:13px;color:var(--muted);white-space:nowrap;min-width:160px;
     }
-
-    .refresh-info strong {
-      color: var(--text);
-      font-weight: 600;
-    }
-
+    .refresh-info strong { color:var(--text);font-weight:600; }
     .progress-wrap {
-      flex: 1;
-      height: 6px;
-      background: var(--bg);
-      border-radius: 3px;
-      overflow: hidden;
+      flex:1;height:6px;min-width:60px;
+      background:var(--bg);border-radius:3px;overflow:hidden;
     }
-
     .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #3b82f6, #60a5fa);
-      border-radius: 3px;
-      transition: width 1s linear;
+      height:100%;background:linear-gradient(90deg,#3b82f6,#60a5fa);
+      border-radius:3px;transition:width 1s linear;
     }
-
+    .toggle-wrap { display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none; }
+    .toggle-label { font-size:13px;font-weight:500;color:var(--muted); }
+    .toggle {
+      width:36px;height:20px;background:#cbd5e1;border-radius:10px;
+      position:relative;transition:background .2s;cursor:pointer;
+      border:none;outline:none;flex-shrink:0;
+    }
+    .toggle::after {
+      content:'';position:absolute;top:2px;left:2px;
+      width:16px;height:16px;background:white;border-radius:50%;
+      transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2);
+    }
+    .toggle.active { background:var(--green); }
+    .toggle.active::after { transform:translateX(16px); }
     .refresh-btn {
-      background: var(--text);
-      color: white;
-      border: none;
-      padding: 9px 18px;
-      border-radius: 9px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: inherit;
-      white-space: nowrap;
-      transition: background .15s, transform .1s;
+      background:var(--text);color:white;border:none;
+      padding:9px 18px;border-radius:9px;font-size:13px;font-weight:600;
+      cursor:pointer;font-family:inherit;white-space:nowrap;
+      transition:background .15s,transform .1s;
     }
+    .refresh-btn:hover  { background:#1e293b; }
+    .refresh-btn:active { transform:scale(.97); }
+    .refresh-btn:disabled { opacity:.5;cursor:not-allowed;transform:none; }
 
-    .refresh-btn:hover  { background: #1e293b; }
-    .refresh-btn:active { transform: scale(.97); }
-    .refresh-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
-
-    /* ── Section heading ── */
+    /* ── Section heading ───────────────────────── */
     .section-title {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--faint);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 12px;
+      font-size:11px;font-weight:700;color:var(--faint);
+      text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;
+      display:flex;align-items:center;gap:8px;
+    }
+    .section-title::after {
+      content:'';flex:1;height:1px;background:var(--border);
     }
 
-    /* ── Cards grid ── */
+    /* ── Product tabs ──────────────────────────── */
+    .tabs { display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap; }
+    .tab {
+      padding:8px 16px;border-radius:9px;font-size:13px;font-weight:600;
+      cursor:pointer;border:1px solid var(--border);background:white;
+      color:var(--muted);transition:all .15s;
+    }
+    .tab.active {
+      background:var(--text);color:white;border-color:var(--text);
+    }
+    .tab:hover:not(.active) { background:var(--gray-bg); }
+
+    /* ── Cards grid ────────────────────────────── */
     .cards-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 32px;
+      display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:32px;
     }
+    @media(max-width:560px){ .cards-grid{ grid-template-columns:1fr; } }
 
-    @media (max-width: 580px) {
-      .cards-grid { grid-template-columns: 1fr; }
-      .clock-time { font-size: 20px; }
-      .logo-title { font-size: 18px; }
-    }
-
-    /* ── Site card ── */
+    /* ── Site card ─────────────────────────────── */
     .card {
-      background: white;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      transition: box-shadow .2s, transform .2s;
-      display: flex;
-      flex-direction: column;
+      background:white;border-radius:14px;border:1px solid var(--border);
+      box-shadow:var(--sh);overflow:hidden;
+      transition:box-shadow .2s,transform .2s;display:flex;flex-direction:column;
     }
-
-    .card:hover {
-      box-shadow: var(--shadow-hover);
-      transform: translateY(-2px);
-    }
-
-    .card-accent {
-      height: 4px;
-      flex-shrink: 0;
-    }
-
-    .card-body {
-      padding: 18px 18px 14px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
+    .card:hover { box-shadow:var(--shh);transform:translateY(-2px); }
+    .card.hidden { display:none; }
+    .card-accent { height:4px;flex-shrink:0; }
+    .card-body { padding:18px 18px 14px;flex:1;display:flex;flex-direction:column;gap:10px; }
     .card-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
+      display:flex;align-items:center;justify-content:space-between;gap:8px;
     }
-
-    .card-identity {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 0;
-    }
-
+    .card-identity { display:flex;align-items:center;gap:10px;min-width:0; }
     .retailer-avatar {
-      width: 34px;
-      height: 34px;
-      border-radius: 9px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      font-weight: 800;
-      color: white;
-      flex-shrink: 0;
-      letter-spacing: -0.5px;
+      width:34px;height:34px;border-radius:9px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:13px;font-weight:800;color:white;flex-shrink:0;letter-spacing:-.5px;
     }
-
     .card-name {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--text);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-size:15px;font-weight:700;color:var(--text);
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
     }
 
-    /* ── Status badge ── */
+    /* ── Badge ─────────────────────────────────── */
     .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 10px;
-      border-radius: 99px;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.2px;
-      white-space: nowrap;
-      flex-shrink: 0;
+      display:inline-flex;align-items:center;gap:6px;
+      padding:4px 10px;border-radius:99px;font-size:12px;
+      font-weight:600;letter-spacing:.2px;white-space:nowrap;flex-shrink:0;
     }
-
-    .badge.in-stock      { background: var(--green-bg); color: var(--green); }
-    .badge.out-of-stock  { background: var(--red-bg);   color: var(--red); }
-    .badge.geo-unverified { background: var(--amber-bg); color: var(--amber); }
-    .badge.unknown       { background: var(--gray-bg);  color: var(--muted); }
-
+    .badge.in-stock       { background:var(--green-bg);color:var(--green); }
+    .badge.out-of-stock   { background:var(--red-bg);color:var(--red); }
+    .badge.geo-unverified { background:var(--amber-bg);color:var(--amber); }
+    .badge.unknown        { background:var(--gray-bg);color:var(--muted); }
     .dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      flex-shrink: 0;
+      width:7px;height:7px;border-radius:50%;flex-shrink:0;
     }
-
-    .dot.green { background: var(--green-dot); animation: pulse-green 2s ease-in-out infinite; }
-    .dot.red   { background: var(--red); }
-    .dot.amber { background: var(--amber); }
-    .dot.gray  { background: var(--faint); }
-
+    .dot.green { background:var(--green-dot);animation:pulse-green 2s ease-in-out infinite; }
+    .dot.red   { background:var(--red); }
+    .dot.amber { background:var(--amber); }
+    .dot.gray  { background:var(--faint); }
     @keyframes pulse-green {
-      0%   { box-shadow: 0 0 0 0 rgba(34,197,94,.7); }
-      70%  { box-shadow: 0 0 0 7px rgba(34,197,94,0); }
-      100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+      0%  { box-shadow:0 0 0 0 rgba(34,197,94,.7); }
+      70% { box-shadow:0 0 0 7px rgba(34,197,94,0); }
+      100%{ box-shadow:0 0 0 0 rgba(34,197,94,0); }
     }
 
-    /* ── Geo warning ── */
+    /* ── Price tag ─────────────────────────────── */
+    .card-price {
+      font-size:17px;font-weight:800;color:var(--text);letter-spacing:-.5px;
+    }
+    .card-price.faint { font-size:13px;font-weight:500;color:var(--faint); }
+
+    /* ── Geo note ──────────────────────────────── */
     .geo-note {
-      font-size: 11px;
-      color: #92400e;
-      background: #fffbeb;
-      border: 1px solid #fde68a;
-      border-radius: 7px;
-      padding: 7px 10px;
-      display: flex;
-      align-items: flex-start;
-      gap: 6px;
-      line-height: 1.5;
+      font-size:11px;color:#92400e;background:#fffbeb;
+      border:1px solid #fde68a;border-radius:7px;
+      padding:6px 10px;display:flex;align-items:flex-start;gap:5px;line-height:1.5;
     }
 
-    /* ── Card footer ── */
+    /* ── Card footer ───────────────────────────── */
     .card-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-top: 12px;
-      border-top: 1px solid var(--bg);
+      display:flex;align-items:center;justify-content:space-between;
+      padding-top:10px;border-top:1px solid var(--bg);
     }
-
-    .card-time {
-      font-size: 11px;
-      color: var(--faint);
-    }
-
+    .card-time { font-size:11px;color:var(--faint); }
     .card-link {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--blue);
-      text-decoration: none;
-      padding: 5px 10px;
-      border-radius: 7px;
-      border: 1px solid var(--blue-border);
-      background: var(--blue-light);
-      transition: background .15s, border-color .15s;
+      font-size:12px;font-weight:600;color:var(--blue);
+      text-decoration:none;padding:5px 10px;border-radius:7px;
+      border:1px solid var(--blue-border);background:var(--blue-light);
+      transition:background .15s;
+    }
+    .card-link:hover { background:#dbeafe; }
+
+    /* ── Physical stores section ───────────────── */
+    .store-search {
+      background:white;border:1px solid var(--border);border-radius:14px;
+      padding:20px;margin-bottom:16px;box-shadow:var(--sh);
+    }
+    .store-search-row {
+      display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    }
+    .input-group { display:flex;flex-direction:column;gap:4px; }
+    .input-label { font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px; }
+    .postal-input {
+      padding:10px 14px;border:1px solid var(--border);border-radius:9px;
+      font-size:15px;font-family:inherit;font-weight:600;color:var(--text);
+      width:130px;outline:none;transition:border-color .15s;
+      font-variant-numeric:tabular-nums;
+    }
+    .postal-input:focus { border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1); }
+    .radius-select {
+      padding:10px 14px;border:1px solid var(--border);border-radius:9px;
+      font-size:14px;font-family:inherit;font-weight:600;color:var(--text);
+      background:white;cursor:pointer;outline:none;appearance:none;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat:no-repeat;background-position:right 10px center;
+      padding-right:30px;
+    }
+    .search-btn {
+      padding:10px 20px;background:var(--blue);color:white;border:none;
+      border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;
+      font-family:inherit;transition:background .15s,transform .1s;white-space:nowrap;
+    }
+    .search-btn:hover  { background:#1d4ed8; }
+    .search-btn:active { transform:scale(.97); }
+    .search-btn:disabled { opacity:.5;cursor:not-allowed; }
+
+    /* ── Store list ────────────────────────────── */
+    .store-list { display:flex;flex-direction:column;gap:10px;margin-bottom:32px; }
+    .store-card {
+      background:white;border:1px solid var(--border);border-radius:12px;
+      padding:16px 18px;box-shadow:var(--sh);
+      display:flex;align-items:center;gap:14px;
+    }
+    .store-dist {
+      font-size:13px;font-weight:700;color:var(--muted);
+      text-align:center;min-width:42px;
+    }
+    .store-dist span { display:block;font-size:10px;font-weight:500;color:var(--faint); }
+    .store-info { flex:1;min-width:0; }
+    .store-name { font-size:14px;font-weight:700;color:var(--text); }
+    .store-address { font-size:12px;color:var(--muted);margin-top:2px;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+    .store-price { font-size:16px;font-weight:800;color:var(--text);white-space:nowrap; }
+    .store-link {
+      font-size:12px;font-weight:600;color:var(--blue);text-decoration:none;
+      padding:5px 10px;border-radius:7px;border:1px solid var(--blue-border);
+      background:var(--blue-light);white-space:nowrap;transition:background .15s;
+    }
+    .store-link:hover { background:#dbeafe; }
+
+    .store-placeholder {
+      background:white;border:1px solid var(--border);border-radius:12px;
+      padding:40px 20px;text-align:center;color:var(--faint);
+      box-shadow:var(--sh);
+    }
+    .store-placeholder-icon { font-size:32px;display:block;margin-bottom:10px; }
+    .store-placeholder p { font-size:14px; }
+
+    /* ── Email subscription ────────────────────── */
+    .email-box {
+      background:white;border:1px solid var(--border);border-radius:14px;
+      padding:24px;margin-bottom:32px;box-shadow:var(--sh);
+    }
+    .email-box-title {
+      font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px;
+    }
+    .email-box-sub { font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.5; }
+    .email-row { display:flex;gap:10px;flex-wrap:wrap; }
+    .email-input {
+      flex:1;min-width:200px;padding:10px 14px;
+      border:1px solid var(--border);border-radius:9px;
+      font-size:14px;font-family:inherit;color:var(--text);
+      outline:none;transition:border-color .15s;
+    }
+    .email-input:focus { border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1); }
+    .email-btn {
+      padding:10px 20px;background:var(--green);color:white;border:none;
+      border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;
+      font-family:inherit;transition:background .15s;white-space:nowrap;
+    }
+    .email-btn:hover { background:#15803d; }
+    .email-feedback { font-size:13px;margin-top:10px; }
+    .email-feedback.ok    { color:var(--green); }
+    .email-feedback.error { color:var(--red); }
+    .email-note {
+      font-size:11px;color:var(--faint);margin-top:10px;line-height:1.5;
+    }
+    .email-unconfigured {
+      font-size:13px;color:var(--muted);background:var(--gray-bg);
+      padding:12px;border-radius:9px;margin-top:8px;
     }
 
-    .card-link:hover { background: #dbeafe; border-color: #93c5fd; }
-
-    /* ── History section ── */
+    /* ── History ───────────────────────────────── */
     .history-box {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: var(--shadow);
+      background:white;border:1px solid var(--border);border-radius:14px;
+      overflow:hidden;box-shadow:var(--sh);margin-bottom:32px;
     }
-
     .history-row {
-      display: flex;
-      align-items: center;
-      padding: 12px 18px;
-      gap: 12px;
-      border-bottom: 1px solid var(--bg);
-      font-size: 13px;
+      display:flex;align-items:center;padding:11px 18px;gap:12px;
+      border-bottom:1px solid var(--bg);font-size:13px;
     }
+    .history-row:last-child { border-bottom:none; }
+    .history-dot { width:8px;height:8px;border-radius:50%;flex-shrink:0; }
+    .history-site { font-weight:600;min-width:105px;color:var(--text); }
+    .history-arrow { color:var(--faint);flex:1;display:flex;align-items:center;gap:6px;flex-wrap:wrap; }
+    .history-time { font-size:11px;color:var(--faint);white-space:nowrap;margin-left:auto; }
+    .no-history { text-align:center;padding:40px 20px;color:var(--faint);font-size:14px; }
+    .no-history-icon { font-size:32px;display:block;margin-bottom:8px; }
 
-    .history-row:last-child { border-bottom: none; }
-
-    .history-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-
-    .history-site {
-      font-weight: 600;
-      min-width: 110px;
-      color: var(--text);
-    }
-
-    .history-arrow {
-      color: var(--faint);
-      flex: 1;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    .history-time {
-      font-size: 11px;
-      color: var(--faint);
-      white-space: nowrap;
-      margin-left: auto;
-    }
-
-    .no-history {
-      text-align: center;
-      padding: 40px 20px;
-      color: var(--faint);
-      font-size: 14px;
-    }
-
-    .no-history-icon { font-size: 32px; display: block; margin-bottom: 8px; }
-
-    /* ── Toast ── */
+    /* ── Toast ─────────────────────────────────── */
     .toast-wrap {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      z-index: 200;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      pointer-events: none;
+      position:fixed;bottom:24px;right:24px;z-index:200;
+      display:flex;flex-direction:column;gap:8px;pointer-events:none;
     }
-
     .toast {
-      background: var(--text);
-      color: white;
-      padding: 12px 18px;
-      border-radius: 12px;
-      font-size: 13px;
-      font-weight: 500;
-      box-shadow: 0 8px 24px rgba(0,0,0,.2);
-      pointer-events: none;
-      animation: slide-in .25s ease-out, fade-out .3s ease-in 2.7s forwards;
-      max-width: 300px;
+      background:var(--text);color:white;padding:12px 18px;border-radius:12px;
+      font-size:13px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);
+      pointer-events:none;max-width:300px;
+      animation:toast-in .25s ease-out, toast-out .3s ease-in 2.7s forwards;
     }
+    .toast.success { background:#15803d; }
+    .toast.error   { background:#dc2626; }
+    @keyframes toast-in  { from{transform:translateY(12px);opacity:0} to{transform:translateY(0);opacity:1} }
+    @keyframes toast-out { from{opacity:1} to{opacity:0} }
 
-    .toast.success { background: #15803d; }
-    .toast.error   { background: #dc2626; }
-
-    @keyframes slide-in {
-      from { transform: translateY(12px); opacity: 0; }
-      to   { transform: translateY(0);    opacity: 1; }
-    }
-
-    @keyframes fade-out {
-      from { opacity: 1; }
-      to   { opacity: 0; }
-    }
-
-    /* ── Loading spinner overlay ── */
+    /* ── Spinner ───────────────────────────────── */
     .spinner-wrap {
-      position: fixed;
-      inset: 0;
-      background: rgba(240,244,248,.7);
-      backdrop-filter: blur(2px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .2s;
+      position:fixed;inset:0;background:rgba(240,244,248,.7);
+      backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;
+      z-index:100;opacity:0;pointer-events:none;transition:opacity .2s;
     }
-
-    .spinner-wrap.active { opacity: 1; pointer-events: all; }
-
+    .spinner-wrap.active { opacity:1;pointer-events:all; }
     .spinner {
-      width: 44px;
-      height: 44px;
-      border: 3px solid var(--border);
-      border-top-color: var(--blue);
-      border-radius: 50%;
-      animation: spin .7s linear infinite;
+      width:44px;height:44px;border:3px solid var(--border);
+      border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;
     }
+    @keyframes spin { to{transform:rotate(360deg)} }
 
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ── Footer ── */
+    /* ── Footer ────────────────────────────────── */
     .footer {
-      text-align: center;
-      padding: 24px 20px 32px;
-      color: var(--faint);
-      font-size: 12px;
-      line-height: 1.8;
+      text-align:center;padding:16px 20px 32px;
+      color:var(--faint);font-size:12px;line-height:1.9;
     }
+    .footer a { color:var(--muted);text-decoration:none; }
+    .footer a:hover { text-decoration:underline; }
 
-    .footer a { color: var(--muted); text-decoration: none; }
-    .footer a:hover { text-decoration: underline; }
+    @media(max-width:580px){
+      .clock-time { font-size:20px; }
+      .logo-title { font-size:17px; }
+      .controls { gap:10px; }
+      .refresh-info { min-width:unset; }
+    }
   </style>
 </head>
 <body>
 
-<!-- Spinner -->
-<div class="spinner-wrap" id="spinnerWrap">
-  <div class="spinner"></div>
-</div>
+<div class="spinner-wrap" id="spinnerWrap"><div class="spinner"></div></div>
+<div class="toast-wrap"   id="toastWrap"></div>
 
-<!-- Toasts -->
-<div class="toast-wrap" id="toastWrap"></div>
-
-<!-- Header -->
+<!-- ── Header ──────────────────────────────────────────────────────── -->
 <header class="header">
   <div class="header-inner">
     <div class="logo">
       <div class="logo-icon">❄️</div>
       <div>
         <div class="logo-title">PortaSplit Monitor</div>
-        <div class="logo-sub">Midea MMCS-12HRN8-QRD0 · France</div>
+        <div class="logo-sub">Midea · France · Disponibilité en temps réel</div>
       </div>
     </div>
     <div class="header-clock">
@@ -562,47 +433,117 @@
   </div>
 </header>
 
-<!-- Stats bar -->
+<!-- ── Stats bar ────────────────────────────────────────────────────── -->
 <div class="stats-bar">
   <div class="stats-inner">
     <div class="stat">
-      <div class="stat-number" id="statTotal">7</div>
+      <div class="stat-number"        id="statSites">—</div>
       <div class="stat-label">Sites surveillés</div>
     </div>
     <div class="stat">
-      <div class="stat-number green" id="statInStock">—</div>
+      <div class="stat-number green"  id="statInStock">—</div>
       <div class="stat-label">En stock</div>
     </div>
     <div class="stat">
-      <div class="stat-number blue" id="statTime">—</div>
+      <div class="stat-number amber"  id="statStores">—</div>
+      <div class="stat-label">Magasins trouvés</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number blue"   id="statTime">—</div>
       <div class="stat-label">Dernière vérif.</div>
     </div>
   </div>
 </div>
 
-<!-- Main -->
+<!-- ── Main ─────────────────────────────────────────────────────────── -->
 <main class="main">
 
-  <!-- Refresh bar -->
-  <div class="refresh-bar">
+  <!-- Controls bar -->
+  <div class="controls">
     <span class="refresh-info">
-      Prochain refresh dans <strong id="countdown">60</strong>s
+      Prochain refresh dans <strong id="countdown">600</strong>s
     </span>
     <div class="progress-wrap">
       <div class="progress-fill" id="progressFill" style="width:100%"></div>
     </div>
+    <label class="toggle-wrap" title="Masquer les sites en rupture">
+      <button class="toggle" id="availableToggle" onclick="toggleAvailable()" aria-label="Uniquement disponibles"></button>
+      <span class="toggle-label">Dispo uniquement</span>
+    </label>
     <button class="refresh-btn" id="refreshBtn" onclick="triggerRefresh()">
       ↻ Vérifier maintenant
     </button>
   </div>
 
-  <!-- Site cards -->
-  <div class="section-title">Disponibilité en ligne</div>
-  <div class="cards-grid" id="cardsGrid">
-    <!-- Populated by JS -->
+  <!-- Product tabs (hidden if single product) -->
+  <div class="tabs" id="productTabs" style="display:none"></div>
+
+  <!-- ── E-commerce sites ─────────────────────────────────────────── -->
+  <div class="section-title">Sites e-commerce</div>
+  <div class="cards-grid" id="cardsGrid"></div>
+
+  <!-- ── Physical stores ─────────────────────────────────────────── -->
+  <div class="section-title">Magasins physiques</div>
+
+  <div class="store-search">
+    <div class="store-search-row">
+      <div class="input-group">
+        <span class="input-label">Code postal</span>
+        <input class="postal-input" id="postalInput" type="text"
+               inputmode="numeric" maxlength="5" placeholder="75017"
+               onkeydown="if(event.key==='Enter')searchStores()">
+      </div>
+      <div class="input-group">
+        <span class="input-label">Rayon</span>
+        <select class="radius-select" id="radiusSelect">
+          <option value="10">10 km</option>
+          <option value="25" selected>25 km</option>
+          <option value="50">50 km</option>
+          <option value="100">100 km</option>
+        </select>
+      </div>
+      <button class="search-btn" id="searchBtn" onclick="searchStores()">
+        Rechercher
+      </button>
+    </div>
   </div>
 
-  <!-- History -->
+  <div class="store-list" id="storeList">
+    <div class="store-placeholder">
+      <span class="store-placeholder-icon">🏪</span>
+      <p>Entrez votre code postal pour voir le stock<br>en magasin Leroy Merlin, Castorama et Bricoman.</p>
+    </div>
+  </div>
+
+  <!-- ── Email subscription ────────────────────────────────────────── -->
+  <div class="section-title">Notifications email</div>
+
+  <div class="email-box" id="emailBox">
+    <div class="email-box-title">Recevoir une alerte quand c'est en stock</div>
+    <div class="email-box-sub">
+      Saisissez votre adresse email pour être notifié(e) dès qu'un changement
+      de disponibilité est détecté sur l'un des sites surveillés.
+    </div>
+    <div id="emailFormArea">
+      <div class="email-row">
+        <input class="email-input" id="emailInput" type="email"
+               placeholder="votre@email.com"
+               onkeydown="if(event.key==='Enter')subscribeEmail()">
+        <button class="email-btn" onclick="subscribeEmail()">M'alerter</button>
+      </div>
+      <div class="email-feedback" id="emailFeedback"></div>
+      <div class="email-note">
+        Vos données ne sont pas partagées. Désabonnement possible à tout moment.
+        Les alertes nécessitent que le serveur SMTP soit configuré (voir README).
+      </div>
+    </div>
+    <div id="emailUnconfigured" style="display:none" class="email-unconfigured">
+      ⚙️ Les notifications email ne sont pas encore configurées sur ce serveur.
+      Définissez les variables SMTP_HOST, SMTP_USER et SMTP_PASS pour les activer.
+    </div>
+  </div>
+
+  <!-- ── History ───────────────────────────────────────────────────── -->
   <div class="section-title">Historique des changements</div>
   <div class="history-box" id="historyBox">
     <div class="no-history">
@@ -614,171 +555,248 @@
 </main>
 
 <footer class="footer">
-  <p>PortaSplit Monitor · Notifications via <a href="https://ntfy.sh" target="_blank">ntfy.sh</a></p>
-  <p>Données mises à jour toutes les heures · Ce n'est pas un site officiel Midea</p>
+  <p>PortaSplit Monitor · Surveillance toutes les 10 minutes</p>
+  <p>Notifications push via <a href="https://ntfy.sh" target="_blank">ntfy.sh</a> · Alertes email via SMTP</p>
+  <p>Ce site n'est pas affilié à Midea ou aux enseignes surveillées.</p>
 </footer>
 
 <script>
-  const INTERVAL = 60; // UI poll interval in seconds
-  let countdown = INTERVAL;
-  let countdownTimer = null;
-  let currentData = null;
+  // ── Constants ───────────────────────────────────────────────────────
+  const POLL_INTERVAL = 600; // 10 min in seconds
 
-  // ── Helpers ────────────────────────────────────────────────
+  // ── State ───────────────────────────────────────────────────────────
+  let countdown       = POLL_INTERVAL;
+  let countdownTimer  = null;
+  let apiData         = null;
+  let activeProduct   = null;
+  let showOnlyAvail   = false;
+  let emailConfigured = false;
 
-  function fmtTime(iso) {
-    if (!iso) return '—';
-    return new Date(iso).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-  }
+  // ── Helpers ─────────────────────────────────────────────────────────
+  const fmtTime = iso => iso
+    ? new Date(iso).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})
+    : '—';
 
-  function fmtRelative(iso) {
+  const fmtRelative = iso => {
     if (!iso) return '';
-    const diff = Math.floor((Date.now() - new Date(iso)) / 1000);
-    if (diff < 60)  return 'à l\'instant';
-    if (diff < 3600) return `il y a ${Math.floor(diff/60)} min`;
-    const h = Math.floor(diff / 3600);
-    return `il y a ${h}h`;
-  }
+    const s = Math.floor((Date.now() - new Date(iso)) / 1000);
+    if (s < 60)   return 'à l\'instant';
+    if (s < 3600) return `il y a ${Math.floor(s/60)} min`;
+    const h = Math.floor(s/3600);
+    return `il y a ${h}h${Math.floor((s%3600)/60)?Math.floor((s%3600)/60)+'min':''}`;
+  };
 
-  function statusLabel(s) {
-    return { in_stock: 'En stock', out_of_stock: 'Rupture', geo_unverified: 'À vérifier', unknown: 'Inconnu' }[s] || s;
-  }
+  const STATUS_LABEL = {
+    in_stock:'En stock', out_of_stock:'Rupture',
+    geo_unverified:'À vérifier', unknown:'Inconnu'
+  };
+  const STATUS_CLASS = {
+    in_stock:'in-stock', out_of_stock:'out-of-stock',
+    geo_unverified:'geo-unverified', unknown:'unknown'
+  };
+  const DOT_CLASS = {
+    in_stock:'green', out_of_stock:'red',
+    geo_unverified:'amber', unknown:'gray'
+  };
 
-  function statusClass(s) {
-    return { in_stock: 'in-stock', out_of_stock: 'out-of-stock', geo_unverified: 'geo-unverified', unknown: 'unknown' }[s] || 'unknown';
-  }
+  const label = s => STATUS_LABEL[s] || s;
+  const cls   = s => STATUS_CLASS[s] || 'unknown';
+  const dot   = s => DOT_CLASS[s]   || 'gray';
 
-  function dotClass(s) {
-    return { in_stock: 'green', out_of_stock: 'red', geo_unverified: 'amber', unknown: 'gray' }[s] || 'gray';
-  }
+  const initials = n => n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+  const h2r = hex => [1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)).join(',');
 
-  function initials(name) {
-    return name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
-  }
-
-  function hexToRgb(hex) {
-    const r = parseInt(hex.slice(1,3),16);
-    const g = parseInt(hex.slice(3,5),16);
-    const b = parseInt(hex.slice(5,7),16);
-    return `${r},${g},${b}`;
-  }
-
-  // ── Toast ──────────────────────────────────────────────────
-
-  function showToast(msg, type = '') {
+  // ── Toast ────────────────────────────────────────────────────────────
+  function toast(msg, type='') {
     const wrap = document.getElementById('toastWrap');
     const el = document.createElement('div');
     el.className = `toast ${type}`;
     el.textContent = msg;
     wrap.appendChild(el);
-    setTimeout(() => el.remove(), 3200);
+    setTimeout(() => el.remove(), 3300);
   }
 
-  // ── Render cards ───────────────────────────────────────────
+  // ── Render product tabs ──────────────────────────────────────────────
+  function renderTabs(products) {
+    const wrap = document.getElementById('productTabs');
+    if (products.length <= 1) { wrap.style.display='none'; return; }
+    wrap.style.display='flex';
+    wrap.innerHTML = products.map(p => `
+      <button class="tab${activeProduct===p.id?' active':''}"
+              onclick="selectProduct('${p.id}')">
+        ${p.label}
+      </button>`).join('');
+  }
 
+  function selectProduct(id) {
+    activeProduct = id;
+    if (!apiData) return;
+    const product = apiData.products.find(p=>p.id===id);
+    if (product) renderCards(product.sites);
+    renderTabs(apiData.products);
+  }
+
+  // ── Render e-commerce cards ──────────────────────────────────────────
   function renderCards(sites) {
     const grid = document.getElementById('cardsGrid');
     grid.innerHTML = sites.map(site => {
-      const cls   = statusClass(site.status);
-      const dc    = dotClass(site.status);
-      const label = statusLabel(site.status);
+      const sc    = cls(site.status);
+      const dc    = dot(site.status);
+      const lbl   = label(site.status);
       const rel   = fmtRelative(site.last_checked);
       const color = site.color || '#64748b';
-      const rgb   = hexToRgb(color);
+      const rgb   = h2r(color);
       const abbr  = initials(site.name);
+      const hidden = showOnlyAvail && site.status !== 'in_stock' ? ' hidden' : '';
 
-      const geoNote = (site.needs_geo && site.status === 'geo_unverified')
-        ? `<div class="geo-note">⚠️ La disponibilité dépend du code postal — vérifier manuellement sur le site.</div>`
+      const priceHtml = site.price
+        ? `<div class="card-price">${site.price}</div>`
+        : `<div class="card-price faint">Prix non disponible</div>`;
+
+      const geoNote = site.needs_geo && site.status === 'geo_unverified'
+        ? `<div class="geo-note">⚠️ Dispo dépend du code postal — vérifier manuellement.</div>`
         : '';
 
       return `
-        <div class="card">
+        <div class="card${hidden}">
           <div class="card-accent" style="background:${color}"></div>
           <div class="card-body">
             <div class="card-top">
               <div class="card-identity">
-                <div class="retailer-avatar" style="background:${color}; box-shadow:0 2px 8px rgba(${rgb},.35)">${abbr}</div>
+                <div class="retailer-avatar"
+                     style="background:${color};box-shadow:0 2px 8px rgba(${rgb},.35)">
+                  ${abbr}
+                </div>
                 <span class="card-name">${site.name}</span>
               </div>
-              <div class="badge ${cls}">
-                <span class="dot ${dc}"></span>
-                ${label}
+              <div class="badge ${sc}">
+                <span class="dot ${dc}"></span>${lbl}
               </div>
             </div>
+            ${priceHtml}
             ${geoNote}
             <div class="card-footer">
-              <span class="card-time">${rel ? 'Vérifié ' + rel : 'Non vérifié'}</span>
+              <span class="card-time">${rel ? 'Vérifié '+rel : 'Non vérifié'}</span>
               <a href="${site.url}" target="_blank" rel="noopener" class="card-link">Voir →</a>
             </div>
           </div>
-        </div>
-      `;
+        </div>`;
     }).join('');
   }
 
-  // ── Render history ─────────────────────────────────────────
+  // ── Render physical stores ────────────────────────────────────────────
+  function renderStores(storesData) {
+    const list = document.getElementById('storeList');
+    const stores = storesData?.stores || [];
 
-  function renderHistory(sites) {
+    // Update stat counter
+    const availCount = stores.filter(s=>s.status==='in_stock').length;
+    document.getElementById('statStores').textContent = stores.length || '—';
+
+    if (!stores.length) {
+      list.innerHTML = `
+        <div class="store-placeholder">
+          <span class="store-placeholder-icon">🔍</span>
+          <p>Aucun magasin trouvé dans ce rayon.<br>Essayez un rayon plus large.</p>
+        </div>`;
+      return;
+    }
+
+    list.innerHTML = stores.map(s => {
+      const sc    = cls(s.status);
+      const dc    = dot(s.status);
+      const lbl   = label(s.status);
+      const price = s.price || '—';
+      const dist  = s.distance_km ? `${s.distance_km}` : '?';
+      const color = { 'Leroy Merlin':'#078443', Castorama:'#0072be', Bricoman:'#e8520a' }[s.retailer] || '#64748b';
+
+      return `
+        <div class="store-card">
+          <div class="store-dist">
+            ${dist}<span>km</span>
+          </div>
+          <div class="store-info">
+            <div class="store-name" style="color:${color}">${s.name}</div>
+            <div class="store-address">${s.address || ''}</div>
+          </div>
+          <div class="badge ${sc}" style="flex-shrink:0">
+            <span class="dot ${dc}"></span>${lbl}
+          </div>
+          <div class="store-price">${price}</div>
+          <a href="${s.url}" target="_blank" rel="noopener" class="store-link">Voir →</a>
+        </div>`;
+    }).join('');
+  }
+
+  // ── Render history ────────────────────────────────────────────────────
+  function renderHistory(products) {
     const box = document.getElementById('historyBox');
     const entries = [];
-
-    sites.forEach(site => {
-      (site.history || []).forEach(h => {
-        entries.push({ site: site.name, ...h });
+    products.forEach(p => {
+      p.sites.forEach(site => {
+        (site.history||[]).forEach(h => entries.push({
+          product: p.label, site: site.name, ...h
+        }));
       });
     });
-
-    entries.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    entries.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
 
     if (!entries.length) {
       box.innerHTML = `<div class="no-history"><span class="no-history-icon">📋</span>Aucun changement détecté pour l'instant.</div>`;
       return;
     }
 
-    box.innerHTML = entries.slice(0, 20).map(e => {
-      const fromCls = statusClass(e.from_status);
-      const toCls   = statusClass(e.to_status);
-      const dotCls  = dotClass(e.to_status);
-      return `
-        <div class="history-row">
-          <span class="history-dot ${dotCls}" style="background:var(--${dotCls === 'green' ? 'green-dot' : dotCls === 'red' ? 'red' : dotCls === 'amber' ? 'amber' : 'faint'})"></span>
-          <span class="history-site">${e.site}</span>
-          <span class="history-arrow">
-            <span class="badge ${fromCls}" style="font-size:11px;padding:3px 7px">${statusLabel(e.from_status)}</span>
-            →
-            <span class="badge ${toCls}" style="font-size:11px;padding:3px 7px">${statusLabel(e.to_status)}</span>
-          </span>
-          <span class="history-time">${fmtTime(e.timestamp)}</span>
-        </div>
-      `;
-    }).join('');
+    const dotColor = s => ({green:'var(--green-dot)',red:'var(--red)',amber:'var(--amber)',gray:'var(--faint)'})[dot(s)]||'var(--faint)';
+
+    box.innerHTML = entries.slice(0,30).map(e => `
+      <div class="history-row">
+        <span class="history-dot" style="background:${dotColor(e.to_status)}"></span>
+        <span class="history-site">${e.site}</span>
+        <span class="history-arrow">
+          <span class="badge ${cls(e.from_status)}" style="font-size:11px;padding:3px 8px">${label(e.from_status)}</span>
+          →
+          <span class="badge ${cls(e.to_status)}" style="font-size:11px;padding:3px 8px">${label(e.to_status)}</span>
+        </span>
+        <span class="history-time">${fmtTime(e.timestamp)}</span>
+      </div>`).join('');
   }
 
-  // ── Update stats bar ───────────────────────────────────────
-
+  // ── Update stats bar ──────────────────────────────────────────────────
   function updateStats(data) {
-    const inStock = (data.sites || []).filter(s => s.status === 'in_stock').length;
-    document.getElementById('statInStock').textContent = inStock;
+    const allSites = data.products.flatMap(p=>p.sites);
+    document.getElementById('statSites').textContent = allSites.length;
+    document.getElementById('statInStock').textContent =
+      allSites.filter(s=>s.status==='in_stock').length;
     document.getElementById('statTime').textContent = fmtTime(data.last_run);
   }
 
-  // ── Fetch status ───────────────────────────────────────────
-
-  async function fetchStatus(silent = false) {
+  // ── Fetch & render everything ─────────────────────────────────────────
+  async function fetchStatus(silent=false) {
     try {
       const res = await fetch('/api/status');
       if (!res.ok) throw new Error(res.statusText);
-      currentData = await res.json();
-      renderCards(currentData.sites || []);
-      renderHistory(currentData.sites || []);
-      updateStats(currentData);
-    } catch (e) {
-      if (!silent) showToast('Erreur de connexion au serveur.', 'error');
+      apiData = await res.json();
+
+      // Email config check
+      emailConfigured = apiData.email_configured;
+      document.getElementById('emailFormArea').style.display     = emailConfigured ? '' : 'none';
+      document.getElementById('emailUnconfigured').style.display = emailConfigured ? 'none' : '';
+
+      if (!activeProduct && apiData.products.length)
+        activeProduct = apiData.products[0].id;
+
+      const product = apiData.products.find(p=>p.id===activeProduct) || apiData.products[0];
+      if (product) renderCards(product.sites);
+
+      renderTabs(apiData.products);
+      renderHistory(apiData.products);
+      updateStats(apiData);
+    } catch(e) {
+      if (!silent) toast('Impossible de joindre le serveur.','error');
     }
   }
 
-  // ── Manual refresh ─────────────────────────────────────────
-
+  // ── Manual refresh (re-scrapes all sites) ────────────────────────────
   async function triggerRefresh() {
     const btn = document.getElementById('refreshBtn');
     btn.disabled = true;
@@ -786,29 +804,28 @@
     document.getElementById('spinnerWrap').classList.add('active');
 
     try {
-      const res = await fetch('/api/refresh', { method: 'POST' });
+      const prevSites = apiData ? apiData.products.flatMap(p=>p.sites.map(s=>[s.name,s.status])) : [];
+      const res = await fetch('/api/refresh',{method:'POST'});
       if (!res.ok) throw new Error(res.statusText);
-      const prev = currentData ? currentData.sites.map(s => [s.name, s.status]) : [];
-      currentData = await res.json();
+      apiData = await res.json();
 
-      // Detect changes for toast
-      const changed = (currentData.sites || []).filter(s => {
-        const p = prev.find(([n]) => n === s.name);
-        return p && p[1] !== s.status;
+      const changed = apiData.products.flatMap(p=>p.sites).filter(s=>{
+        const prev = prevSites.find(([n])=>n===s.name);
+        return prev && prev[1]!==s.status;
       });
 
-      renderCards(currentData.sites || []);
-      renderHistory(currentData.sites || []);
-      updateStats(currentData);
+      const product = apiData.products.find(p=>p.id===activeProduct)||apiData.products[0];
+      if (product) renderCards(product.sites);
+      renderTabs(apiData.products);
+      renderHistory(apiData.products);
+      updateStats(apiData);
       resetCountdown();
 
-      if (changed.length) {
-        changed.forEach(s => showToast(`${s.name} : ${statusLabel(s.status)}`, s.status === 'in_stock' ? 'success' : ''));
-      } else {
-        showToast('Aucun changement détecté.');
-      }
-    } catch (e) {
-      showToast('Erreur lors de la vérification.', 'error');
+      changed.length
+        ? changed.forEach(s=>toast(`${s.name} : ${label(s.status)}`, s.status==='in_stock'?'success':''))
+        : toast('Aucun changement détecté.');
+    } catch(e) {
+      toast('Erreur lors de la vérification.','error');
     } finally {
       btn.disabled = false;
       btn.textContent = '↻ Vérifier maintenant';
@@ -816,46 +833,112 @@
     }
   }
 
-  // ── Countdown ──────────────────────────────────────────────
+  // ── Available-only toggle ─────────────────────────────────────────────
+  function toggleAvailable() {
+    showOnlyAvail = !showOnlyAvail;
+    document.getElementById('availableToggle').classList.toggle('active', showOnlyAvail);
+    if (!apiData) return;
+    const product = apiData.products.find(p=>p.id===activeProduct)||apiData.products[0];
+    if (product) renderCards(product.sites);
+  }
 
+  // ── Physical store search ─────────────────────────────────────────────
+  async function searchStores() {
+    const postal  = document.getElementById('postalInput').value.trim();
+    const radius  = document.getElementById('radiusSelect').value;
+    const btn     = document.getElementById('searchBtn');
+
+    if (!/^\d{5}$/.test(postal)) { toast('Code postal invalide (5 chiffres)','error'); return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Recherche…';
+
+    try {
+      const res = await fetch(`/api/stores/search?postal_code=${postal}&radius_km=${radius}`,{method:'POST'});
+      if (!res.ok) throw new Error((await res.json()).detail || res.statusText);
+      const data = await res.json();
+
+      if (data.error) { toast(data.error,'error'); return; }
+      renderStores(data);
+
+      const n = data.stores.length;
+      toast(n ? `${n} magasin${n>1?'s':''} trouvé${n>1?'s':''} dans un rayon de ${radius} km.` : 'Aucun magasin dans ce rayon.');
+    } catch(e) {
+      toast('Erreur lors de la recherche.','error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Rechercher';
+    }
+  }
+
+  // ── Email subscription ────────────────────────────────────────────────
+  async function subscribeEmail() {
+    const email = document.getElementById('emailInput').value.trim();
+    const fb    = document.getElementById('emailFeedback');
+
+    if (!email) { fb.textContent='Entrez une adresse email.'; fb.className='email-feedback error'; return; }
+
+    try {
+      const res = await fetch('/api/subscribe',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({email})
+      });
+      const data = await res.json();
+      fb.textContent  = data.message;
+      fb.className    = `email-feedback ${data.ok ? 'ok' : 'error'}`;
+      if (data.added) document.getElementById('emailInput').value='';
+    } catch(e) {
+      fb.textContent='Erreur réseau.'; fb.className='email-feedback error';
+    }
+  }
+
+  // ── Countdown ─────────────────────────────────────────────────────────
   function resetCountdown() {
-    countdown = INTERVAL;
+    countdown = POLL_INTERVAL;
     updateCountdownUI();
   }
-
   function updateCountdownUI() {
     document.getElementById('countdown').textContent = countdown;
-    document.getElementById('progressFill').style.width = (countdown / INTERVAL * 100) + '%';
+    document.getElementById('progressFill').style.width = (countdown/POLL_INTERVAL*100)+'%';
   }
-
   function startCountdown() {
     clearInterval(countdownTimer);
-    countdownTimer = setInterval(async () => {
+    countdownTimer = setInterval(async()=>{
       countdown--;
       updateCountdownUI();
-      if (countdown <= 0) {
-        countdown = INTERVAL;
-        await fetchStatus(true);
-      }
-    }, 1000);
+      if (countdown<=0){ countdown=POLL_INTERVAL; await fetchStatus(true); }
+    },1000);
   }
 
-  // ── Clock ──────────────────────────────────────────────────
-
+  // ── Clock ──────────────────────────────────────────────────────────────
   function updateClock() {
     const now = new Date();
     document.getElementById('clockTime').textContent =
-      now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+      now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
     document.getElementById('clockDate').textContent =
-      now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+      now.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
   }
 
-  // ── Boot ───────────────────────────────────────────────────
-
+  // ── Boot ───────────────────────────────────────────────────────────────
   async function init() {
     updateClock();
     setInterval(updateClock, 1000);
     await fetchStatus();
+
+    // Restore last store search if available
+    try {
+      const res = await fetch('/api/stores');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.stores?.length) {
+          renderStores(data);
+          document.getElementById('postalInput').value = data.postal_code||'';
+          document.getElementById('radiusSelect').value = String(data.radius_km||25);
+        }
+      }
+    } catch(_){}
+
     startCountdown();
   }
 
